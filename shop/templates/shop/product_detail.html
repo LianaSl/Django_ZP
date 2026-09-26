@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <ul class="Products_list">
+         {% if product %}
+         
+        
+       
+         <li class="product_item">
+             <h1>{{ prod.title }}</h1>
+             <p>{{ prod.description }}</p>
+             <span>{{ prod.price }}</span>
+             <span>{{ prod.quantity }}</span>
+             
+             </li>
+              {% else %}
+                <p>Product not found.</p>
+              {% endif %}
+   
+   </ul>
+</body>
+</html>
