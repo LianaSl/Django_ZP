@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liana Šljonkina — Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+    
+        <nav class="nav">
+           <ul>
+    <li><a href="index.html" class="active">HLAVNÍ</a></li>
+    <li><a href="index1.html">O MNĚ</a></li>
+    <li><a href="index2.html">CERTIFIKÁTY</a></li>
+    <li><a href="index3.html">FOTOGALERIE</a></li>
+    <li><a href="http://127.0.0.1:8000/shop/home/">E-SHOP</a></li>
+    <li><a href="index5.html">KONTAKT</a></li>
+</ul>
+        </nav>
+    </header>
+    <main>
+    {% block main_content  %}
+    
+    {% endblock main_content  %}
+    </main>
+
+    <aside class="aside">
+        <div class="parent">
+            <div class="foto">
+         <a href="#"><img class="logo-img2" src="asets/liana.webp" alt="foto" fetchpriority="high"></a>
+            </div>
+            <p>Dobrý den, jmenuji se Liana.
+                
+            </p>
+            <div class="foto2">
+          <a href="#"><img class="logo-img2" src="asets/karLi.webp" alt="logo" fetchpriority="high"></a>
+            </div>
+        </div>
+    </aside>
+
+    <footer class="footer">
+        <div>© created by <a href="mailto:sljonkina@gmail.com">Liana Šljonkina</a></div>
+    </footer>
+</body>
+</html>

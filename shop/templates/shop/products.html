@@ -1,21 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-   <ul class="Products_list">
-       {% for prod  in products %}
-         <li class="product_item">
-             <h1>{{ prod.title }}</h1>
-             <p>{{ prod.description }}</p>
-             <span>{{ prod.price }}</span>
-             <span>{{ prod.quantity }}</span>
-             <a href="{% url 'product_detail' id=prod.id %}"> O produkte</a>
-             </li>
-   {% endfor %}
-   </ul>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block main_content %}
+    <ul class="Products_list">
+        {% for prod in products %}
+            <li class="product-item">
+                <h1>{{ prod.title }}</h1>
+                <p>{{ prod.description }}</p>
+                <span>{{ prod.price }} CZK </span>
+                <span>{{ prod.quantity }} шт.</span>
+                <a href="{% url 'product_detail' id=prod.id %}"> Подробнее </a>
+            </li>
+        {% endfor %}
+</ul>
+{% endblock main_content %}

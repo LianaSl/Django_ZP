@@ -1,18 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-   <h1>Welcome to My Shop</h1>
-   <h2>{{ name }}</h2>
-    <h2>{{ age }}</h2>
-    <p>{{list}}</p>
-    <p>{{tuple}}</p>
-    <p>{{set}}</p>
-    <p>{{dict.city}}</p>
-     
-</body>
-</html>
+{% extends "base.html" %}
+{% block main_content %}
+    <ul class="Products_list">
+        {% if prod %}
+            <li class="product-item">
+                <h1>{{ prod.title }}</h1>
+                <p>{{ prod.description }}</p>
+                <span>{{ prod.price }} CZK </span>
+                <span>{{ prod.quantity }} шт.</span>
+            </li>
+            {% else %}
+                <p>Product not found</p>
+            {% endif %}
+</ul>
+{% endblock main_content %}
