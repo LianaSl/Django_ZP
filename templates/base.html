@@ -1,10 +1,13 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
     <title>Liana Šljonkina — Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+  
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
@@ -24,6 +27,8 @@
         </nav>
     </header>
     <main>
+    <img src="{% static 'shop/images/foto 6.jpg' %}" alt="liana">
+
     {% block main_content  %}
     
     {% endblock main_content  %}
