@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
 products_list = [
         {
@@ -120,7 +121,13 @@ def products(request):
     return render(request, "shop/products.html", context)
 
 def about_us(request):
-    return HttpResponse("ABOUT US PAGE!")
+    print(request.method)
+    if request.method =="POST":
+        message = request.POST.get("message","default")
+        print(message)
+    return render(request, 'shop/about_us.html')
+
+
 
 def hello(request, name):
     return HttpResponse(f"HELLO{name}")
