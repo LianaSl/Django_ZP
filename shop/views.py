@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from .forms import MessageForm
+
 
 products_list = [
         {
@@ -121,12 +123,19 @@ def products(request):
     return render(request, "shop/products.html", context)
 
 def about_us(request):
-    print(request.method)
+    if request.method == "GET":
+        form = MessageForm()
+        return render(request, "shop/about_us.html", {"form": form})
+    
+
+
+    
     if request.method =="POST":
         message = request.POST.get("message","default")
         print(message)
-    return render(request, 'shop/about_us.html')
-
+        form = MessageForm()
+    return render(request, "shop/about_us.html", {"form": form})
+    
 
 
 def hello(request, name):
