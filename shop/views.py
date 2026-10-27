@@ -7,8 +7,10 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django. views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from django.shortcuts import render, redirect
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 
 class HomeView(View):
@@ -146,6 +148,12 @@ class ProductsListView(ListView):
     template_name = "shop/products.html"
     model = Product
     context_object_name = "products"
+    paginate_by = 3
+    ordering = ["price"]
+
+# def get_queryset(self): 
+#     return Product.objects.all().order_by("price")
+
 
 
 # class ProductView(TemplateView):
@@ -184,16 +192,32 @@ def hello(request, name):
 def contacts_page(request):
     return render(request, 'shop/contacts_page.html')
 
-def product_detail(request, id):
-    context ={}
-    try:
-        prod = Product.objects.get(id=id)
-        context["product"] = prod
-    except Product.DoesNotExist:
-        context["product"] = "Product not found"
+class ProductDetailView(DetailView):
+    template_name = "shop/product_detail.html"
+    model = Product
+    context_object_name = "product"
+    pk_url_kwarg = "id"
 
-    return render(request, "shop/product_detail.html", context)
-          
+
+
+# def product_detail(request, id):
+#     context ={}
+#     try:
+#         prod = Product.objects.get(id=id)
+#         context["product"] = prod
+#     except Product.DoesNotExist:
+#         context["product"] = "Product not found"
+
+#     return render(request, "shop/product_detail.html", context)
+
+
+class ProductCreateView(CreateView):
+    template_name = "shop/create_product.html"
+    model = Product
+    form_class = ProductCreateForm
+    success_url = reverse_lazy("products_page")  
+
+
 def create_product(request):
     if request.method == "GET":
         form = ProductCreateForm()
@@ -214,7 +238,7 @@ def update_product(request, id):
        form = ProductCreateForm(request.POST, request.FILES, instance = product)
        if form.is_valid():
             form.save()
-            return redirect(product_detail, id=product.id)
+            return redirect(DetailView, id=product.id)
        return render(request, "shop/create_product.html", {"form": form})
     else:
         form = ProductCreateForm(instance=product)
