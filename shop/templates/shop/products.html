@@ -8,6 +8,7 @@
                 <span>{{ prod.price }} CZK </span>
                 <span>{{ prod.quantity }} шт.</span>
                 <a href="{% url 'product_detail' id=prod.id %}"> Подробнее </a>
+                 <a href="{% url 'update_product' id=prod.id %}"> Редактировать </a>
             </li>
         {% endfor %}
 </ul>

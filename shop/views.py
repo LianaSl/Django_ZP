@@ -1,9 +1,46 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import MessageForm
+from shop.models import Product
+from .forms import MessageForm, CategoryForm, ProductCreateForm, RegisterForm, LoginForm
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
+from django. views import View
+from django.views.generic import TemplateView, ListView
+from django.shortcuts import render, redirect
 
 
+class HomeView(View):
+    http_method_names =["get"]
+
+    def get(self, request, *args, **kwargs):
+        context = {
+                "name": "John Doe",
+                "age": 30,
+                "list" : [1,2,3,4,5],
+                "tuple" : (1,2,3,4,5),
+                "set" : {1,2,3,4,5},
+                "dict" : {"city": "Prague"}
+           
+    }
+        return render(request, "shop/home.html", context)
+
+class AboutUsView(View):
+    http_method_names = ["get", "post"]
+
+    def get(self, request, *args, **kwargs):
+        form = CategoryForm()
+        return render(request, "shop/about_us.html", {"form": form})
+        
+    def post(self, request, *args, **kwargs):
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = CategoryForm()
+        return render(request, "shop/about_us.html", {"form": form})
+
+  
 products_list = [
         {
         "id": 1,
@@ -104,17 +141,22 @@ products_list = [
     }
 ]
 # Create your views here.
-def home(request):
-    context = {
-        "name": "John Doe",
-         "age": 30,
-         "list" : [1,2,3,4,5],
-         "tuple" : (1,2,3,4,5),
-          "set" : {1,2,3,4,5},
-          "dict" : {"city": "Prague"}
-           
-    }
-    return render(request, "shop/home.html", context)
+
+class ProductsListView(ListView):
+    template_name = "shop/products.html"
+    model = Product
+    context_object_name = "products"
+
+
+# class ProductView(TemplateView):
+#     template_name = "shop/products.html"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["products"] = Product.objects.all()
+#         return context
+        
+    
 
 def products(request):
     context = {
@@ -124,16 +166,14 @@ def products(request):
 
 def about_us(request):
     if request.method == "GET":
-        form = MessageForm()
+        form = CategoryForm()
         return render(request, "shop/about_us.html", {"form": form})
-    
-
-
-    
+       
     if request.method =="POST":
-        message = request.POST.get("message","default")
-        print(message)
-        form = MessageForm()
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = CategoryForm()
     return render(request, "shop/about_us.html", {"form": form})
     
 
@@ -141,11 +181,71 @@ def about_us(request):
 def hello(request, name):
     return HttpResponse(f"HELLO{name}")
 
+def contacts_page(request):
+    return render(request, 'shop/contacts_page.html')
+
 def product_detail(request, id):
     context ={}
-    for product in products_list:
-        if product["id"] ==id:
-            context["product"]=product
+    try:
+        prod = Product.objects.get(id=id)
+        context["product"] = prod
+    except Product.DoesNotExist:
+        context["product"] = "Product not found"
+
     return render(request, "shop/product_detail.html", context)
           
-   
+def create_product(request):
+    if request.method == "GET":
+        form = ProductCreateForm()
+        return render(request, "shop/create_product.html", {"form": form})
+    if request.method == "POST":
+        form = ProductCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            form = ProductCreateForm()
+        return render(request, "shop/create_product.html", {"form": form})
+
+def update_product(request, id):
+    try:
+        product = Product.objects.get(id=id)
+    except Product.DoesNotExist:
+        redirect("products_page")
+    if request.method == "POST":
+       form = ProductCreateForm(request.POST, request.FILES, instance = product)
+       if form.is_valid():
+            form.save()
+            return redirect(product_detail, id=product.id)
+       return render(request, "shop/create_product.html", {"form": form})
+    else:
+        form = ProductCreateForm(instance=product)
+        return render(request, "shop/create_product.html", {"form": form})   
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("products_page")
+    else:
+        form =RegisterForm()
+    return render(request, "shop/register.html", {"form": form})
+
+def login_view(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            login(request, form.user)
+            return redirect("products_page")
+    else:
+         form = LoginForm()
+    return render(request, "shop/login.html", {"form": form})  
+
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("products_page") 
+    else:
+        form = UserCreationForm()
+    return render(request, "shop/register.html", {"form": form})

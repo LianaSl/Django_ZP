@@ -43,12 +43,9 @@ class Product(models.Model):
             validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif','webp'])]
             )
     category = models.ForeignKey(
-        Category,
-        on_delete=models.PROTECT,
+        Category,on_delete=models.PROTECT,
         related_name='products',
-        blank=True,
-        null=True,
-    )
+          )
 
     class Meta:
         verbose_name = 'Product'

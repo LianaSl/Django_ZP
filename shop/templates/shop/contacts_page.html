@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% load static %}
+{% block main_content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body { background: #d6e6f3; }
+
+        .contact-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            padding: 50px 20px;
+            background-color: #d6e6f3;
+            background-image: url("{% static 'shop/images/contact-bg.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .contact-block {
+            width: 100%;
+            max-width: 760px;
+            padding: 45px 40px;
+            box-sizing: border-box;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 25px;
+            box-shadow: 0 0 30px rgba(240, 120, 130, 0.45);
+            font-family: "EB Garamond", serif;
+            color: #0b6fb5;
+        }
+
+        .contact-title {
+            margin: 0 0 20px;
+            font-family: "Playfair Display", serif;
+            font-size: 2.8rem;
+            color: #0b6fb5;
+        }
+
+        .contact-text { margin: 0; font-size: 1.35rem; line-height: 1.7; }
+
+        .divider {
+            height: 3px;
+            width: 60%;
+            margin: 28px auto;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #3a7bd5, #f09090);
+        }
+
+        .socials {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .social-link,
+        .btn-contact,
+        .btn-send {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 26px;
+            font-family: inherit;
+            font-size: 1.3rem;
+            color: #0b6fb5;
+            text-decoration: none;
+            background: #d6e6f3;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(240, 120, 130, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .social-link:visited { color: #0b6fb5; }
+
+        .social-link:hover,
+        .btn-contact:hover,
+        .btn-send:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 24px rgba(240, 120, 130, 0.9);
+        }
+
+        .btn-contact { font-size: 1.4rem; padding: 12px 34px; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            background: rgba(11, 60, 110, 0.55);
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            position: relative;
+            width: 90%;
+            max-width: 480px;
+            padding: 35px;
+            box-sizing: border-box;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(240, 120, 130, 0.6);
+            font-family: "EB Garamond", serif;
+            color: #0b6fb5;
+        }
+
+        .modal h2 {
+            margin: 0 0 20px;
+            text-align: center;
+            font-family: "Playfair Display", serif;
+            font-size: 1.9rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 16px;
+            font-size: 2rem;
+            line-height: 1;
+            color: #0b6fb5;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .field-wrap { margin-bottom: 15px; }
+        .field-wrap label { display: block; margin-bottom: 5px; font-size: 1.2rem; }
+
+        .field-wrap input,
+        .field-wrap textarea {
+            width: 100%;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1.1rem;
+            color: #0b4f86;
+            background: #f4f9fd;
+            border: 1px solid #9bb8d3;
+            border-radius: 10px;
+        }
+
+        .field-wrap input:focus,
+        .field-wrap textarea:focus {
+            outline: none;
+            border-color: #f09090;
+            box-shadow: 0 0 8px rgba(240, 120, 130, 0.5);
+        }
+
+        .field-wrap textarea { min-height: 120px; resize: vertical; }
+        .btn-send { display: flex; margin: 10px auto 0; }
+        .success-msg { text-align: center; font-size: 1.4rem; }
+
+        @media (max-width: 600px) {
+            .contact-block { padding: 30px 20px; }
+            .contact-title { font-size: 2.2rem; }
+            .contact-text { font-size: 1.15rem; }
+        }
+    </style>
+
+    <section class="contact-page">
+        <div class="contact-block">
+            <h1 class="contact-title">Kontakt</h1>
+            <p class="contact-text">
+                Pokud máte dotaz k objednávce nebo ke zboží,<br>
+                můžete mi napsat osobní zprávu<br>
+                nebo mě najít a sledovat na mých sociálních sítích.
+            </p>
+            <div class="divider"></div>
+            <div class="socials">
+                <a class="social-link" href="https://mail.google.com/mail/?view=cm&to=sljonkina@gmail.com" target="_blank" rel="noopener">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>E-mail</span>
+                </a>
+                <a class="social-link" href="https://www.instagram.com/liana_bizne/" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <a class="social-link" href="https://www.linkedin.com/in/liana-%C5%A1ljonkina/" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a class="social-link" href="https://github.com/LianaSl" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button id="open-modal-btn" class="btn-contact" type="button">Napsat zprávu</button>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button id="modal-close-btn" class="modal-close" type="button">&times;</button>
+            <h2>Napište mi</h2>
+            <form id="contact-form" action="https://formspree.io/f/mvzwkqwl" method="POST">
+                <div class="field-wrap">
+                    <label for="iname">Jméno</label>
+                    <input type="text" id="iname" name="name" placeholder="Vaše jméno">
+                </div>
+                <div class="field-wrap">
+                    <label for="iemail">E-mail</label>
+                    <input type="email" id="iemail" name="email" placeholder="vas@email.cz">
+                </div>
+                <div class="field-wrap">
+                    <label for="imessage">Zpráva</label>
+                    <textarea id="imessage" name="message" placeholder="Vaše zpráva..."></textarea>
+                </div>
+                <button type="submit" class="btn-send">Odeslat zprávu</button>
+            </form>
+            <div id="success-msg" class="success-msg" style="display:none;">
+                ✅ Děkuji! Vaše zpráva byla odeslána.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const form = document.getElementById('contact-form');
+        const successMsg = document.getElementById('success-msg');
+
+        function openModal() { modal.classList.add('open'); }
+        function closeModal() {
+            modal.classList.remove('open');
+            form.style.display = '';
+            successMsg.style.display = 'none';
+        }
+
+        document.getElementById('open-modal-btn').addEventListener('click', openModal);
+        document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (response.ok) {
+                    form.reset();
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                } else {
+                    alert('Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.');
+                }
+            } catch (err) {
+                alert('Chyba připojení. Zkuste to prosím znovu.');
+            }
+        });
+    </script>
+{% endblock main_content %}
+

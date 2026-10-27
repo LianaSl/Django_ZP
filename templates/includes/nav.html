@@ -3,5 +3,16 @@
         <li><a href="{% url 'home_page' %}">Home</a></li>
         <li><a href="{% url 'products_page' %}">Products</a></li>
         <li><a href="{% url 'about_page' %}">About</a></li>
+        <li><a href="{% url 'create_product' %}">Create Product</a></li>
     </ul>
+
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}!</p>
+    <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+{% endif %}
+
 </nav>
