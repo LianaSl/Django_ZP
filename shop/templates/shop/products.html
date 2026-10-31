@@ -1,38 +1,52 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block main_content %}
+    <link rel="stylesheet" href="{% static 'shop/css/style_products_page.css' %}">
+
+    <div class="catalog-header">
+        <a href="{% url 'cart' %}" class="cart-link">Корзина</a>
+    </div>
+
     <ul class="Products_list">
         {% for prod in products %}
-            <li class="product-item">
-            <h1>{{ prod.title|upper }}</h1>
-                <p>{{ prod.description }}</p>
-                <span>{{ prod.price }} CZK </span>
-                <span>{{ prod.quantity }} шт.</span>
-                <a href="{% url 'product_detail' id=prod.id %}"> Подробнее </a>
-                 <a href="{% url 'update_product' id=prod.id %}"> Редактировать </a>
+            <li class="product_item">
+                
+                <!-- Ссылка на детальную страницу (Картинка + Название) -->
+                <a href="{% url 'product_detail' id=prod.id %}" class="product-card-link">
+                    <div class="product-image-box">
+                        {% if prod.image %}
+                            <img src="{{ prod.image.url }}" alt="{{ prod.name }}" class="product-img">
+                        {% else %}
+                            <div class="no-photo">Нет фото</div>
+                        {% endif %}
+                    </div>
+                    <!-- ИСПРАВЛЕНО: используем prod.name вместо title -->
+                    <h2 class="product-title">{{ prod.name }}</h2>
+                </a>
+
+                <div class="product-bottom">
+                    <span class="product-price">{{ prod.price }} CZK</span>
+
+                    <!-- Кнопка добавления в корзину -->
+                    <form action="{% url 'cart_product' id=prod.id %}" method="post" class="cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="buy-btn">Do košíku</button>
+                    </form>
+
+                    <!-- Админ-панель -->
+                    {% if user.is_superuser %}
+                        <div class="admin-actions">
+                            <a href="{% url 'update_product' id=prod.id %}" class="admin-link">Редактировать</a>
+                            <form action="{% url 'product_delete' id=prod.id %}" method="post"
+                                  onsubmit="return confirm('Удалить товар?');" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-btn">Удалить</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
             </li>
         {% endfor %}
-</ul>
-
-{% if is_paginated %}
-  <div class="pagination">
-    {% if page_obj.has_previous %}
-      <a href="?page=1">Первая</a>
-      <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
-    {% endif %}
-
-     {% for page_num in paginator.page_range %}
-      {% if page_num == page_obj.number %}
-        <strong>{{ page_num }}</strong>
-      {% else %}
-        <a href="?page={{ page_num }}">{{ page_num }}</a>
-      {% endif %}
-    {% endfor %}
-
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Вперёд</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
-    {% endif %}
-  </div>
-{% endif %}
+    </ul>
 {% endblock main_content %}
-|

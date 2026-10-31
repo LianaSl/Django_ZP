@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'shop.core.context_processors.cart_processor',
             ],
         },
     },
@@ -84,6 +85,13 @@ DATABASES = {
         'PORT': '5432',           # Порт PostgreSQL (по умолчанию 5432)
     }
 }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'default-local-memory',
+    }
+}
+
 
 
 
@@ -137,3 +145,7 @@ MAILERS = {
 }
 
 AUTH_USER_MODEL = 'shop.User'
+
+LOGOUT_REDIRECT_URL = '/shop/products/'
+
+LOGIN_URL="/shop/login"

@@ -16,18 +16,18 @@
     <header class="header">
         <nav class="nav">
             <ul>
-                <li><a href="https://lianasl.github.io/HTML_ZP/index.html">HLAVNÍ</a></li>
-                <li><a href="https://lianasl.github.io/HTML_ZP/index1.html">O MNĚ</a></li>
-                <li><a href="{% url 'home_page' %}" class="active">E-SHOP</a></li>
+                <li><a href="{% url 'home_page' %}">Hlavni</a></li>
+               <li><a href="{% url 'products_page' %}">Katalog</a></li>
+                <li><a href="{% url 'home_page' %}">KOsik</a></li>
+                <li><a href="{% url 'home_page' %}">K pokladne</a></li>
                 <li><a href="{% url 'contacts_page' %}">KONTAKT</a></li>
             </ul>
         </nav>
     </header>
-
-    <main>
-        {% block main_content %}
-        {% endblock main_content %}
-    </main>
+    
+   {% block main_content %}
+   
+   {% endblock main_content %}
 
     <footer class="footer">
         <div>© created by <a href="mailto:sljonkina@gmail.com">Liana Šljonkina</a></div>
