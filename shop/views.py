@@ -24,9 +24,8 @@ class HomeView(View):
     http_method_names = ["get", "post"]
 
     def get(self, request, *args, **kwargs):
-        color = request.COOKIES.get("my_color", "red")
-        context = {
-            "my_color": color
+        color = request.COOKIES.get("my_color", )
+        context = {         
         }
         return render(request, "shop/home.html", context)
 

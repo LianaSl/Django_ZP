@@ -1,0 +1,113 @@
+/* ===== Фон страницы: мягкий градиент, в который растворяются края фото ===== */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(90deg, #f3c4c7 0%, #dbe6f3 50%, #9fc2f0 100%);
+}
+
+/* ===== Блок с фото ===== */
+.hero {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    aspect-ratio: 2096 / 1184;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+/* Само фото лежит отдельным слоем, чтобы размыть только его, а не текст */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("../images/LianaShop1.jpg") center / 100% 100% no-repeat;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+
+/* ===== Текст ===== */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    width: 45%;
+    padding: 5% 48px 0;
+    color: #fff;
+    text-align: center;
+}
+
+.hero-content h1 {
+    margin: 0 0 8px;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+}
+
+.hero-content p {
+    margin: 0 0 16px;
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    line-height: 1.35;
+}
+
+/* ===== Кнопки со свечением ===== */
+.hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-buttons a {
+    padding: 8px 28px;
+    border-radius: 16px;
+    background: #d6e6f3;
+    color: #0a72c2;
+    font-size: 1.4rem;
+    text-decoration: none;
+    border: 2px solid rgba(240, 147, 147, 0.9);
+    box-shadow:
+        0 0 10px 4px rgba(240, 147, 147, 0.85),
+        0 10px 22px rgba(58, 123, 221, 0.45);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.hero-buttons a:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 14px 6px rgba(240, 147, 147, 1),
+        0 12px 26px rgba(58, 123, 221, 0.55);
+}
+
+/* ===== Футер: низкий и прижат к низу ===== */
+footer.footer {
+    margin-top: auto;
+    height: auto;
+    min-height: 0;
+    padding: 14px 32px;
+    font-size: 1rem;
+}
+footer.footer a { color: #fff; }
+
+/* ===== Телефон ===== */
+@media (max-width: 700px) {
+    .hero {
+        aspect-ratio: auto;
+        min-height: 480px;
+        align-items: flex-end;
+        justify-content: center;
+    }
+    .hero::before {
+        background-size: cover;
+        background-position: 15% top;
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+    .hero-content {
+        width: 100%;
+        padding: 20px 16px;
+        background: rgba(30, 90, 190, 0.75);
+    }
+    .hero-buttons a { font-size: 1.1rem; padding: 6px 20px; }
+}
