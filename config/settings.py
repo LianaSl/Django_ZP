@@ -148,4 +148,6 @@ AUTH_USER_MODEL = 'shop.User'
 
 LOGOUT_REDIRECT_URL = '/shop/products/'
 
-LOGIN_URL="/shop/login"
+LOGIN_URL = 'login'
+
+LANGUAGE_CODE = 'cs'

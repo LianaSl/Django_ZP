@@ -16,7 +16,7 @@ main {
     display: flex;
     flex-direction: column;
     background-color: rgba(198, 220, 238, 0.7);
-    background-image: url("asets/put5.jpeg");
+    background-image: url("");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -55,11 +55,13 @@ main {
 .nav ul li { cursor: pointer; }
 
 /* === КНОПКИ МЕНЮ (свечение как у фото) === */
-.nav ul li a {
+.nav ul li a,
+.nav ul li .logout-btn {
     display: inline-block;
     padding: 10px 26px;
     font-family: 'EB Garamond', serif;
     font-size: 40px;
+    line-height: normal;
     text-decoration: none;
     color: rgb(5, 114, 187);
     background: rgb(214, 229, 242);
@@ -69,10 +71,18 @@ main {
         0 0 15px 5px rgb(241, 146, 146),
         0 0 30px 10px rgb(99, 160, 184);
     transition: transform 0.3s ease;
+    cursor: pointer;
 }
 
-.nav ul li a:hover {
+.nav ul li a:hover,
+.nav ul li .logout-btn:hover {
     transform: scale(1.05);
+}
+
+/* форма выхода внутри меню */
+.logout-form {
+    display: inline;
+    margin: 0;
 }
 
 /* текущая страница */
@@ -130,7 +140,8 @@ main {
 @media (max-width: 768px) {
     .header { height: auto; padding: 16px 20px; }
     .nav ul { flex-wrap: wrap; justify-content: center; gap: 20px; padding: 10px 16px; }
-    .nav ul li a { font-size: 22px; padding: 8px 16px; }
+    .nav ul li a,
+    .nav ul li .logout-btn { font-size: 22px; padding: 8px 16px; }
     .parent { flex-direction: column; align-items: center; text-align: center; font-size: 24px; padding: 30px 20px; gap: 30px; }
     .karLi, .logo-img2 { width: 220px; height: 280px; }
 }
@@ -162,7 +173,7 @@ main {
     align-items: center;
     min-height: 70vh;
     padding: 50px 20px;
-    background: url("../images/contact-bg.jpeg") center / cover no-repeat;
+   
 }
 
 .contact-block {
@@ -326,4 +337,62 @@ main {
     .contact-block { padding: 30px 20px; }
     .contact-title { font-size: 2.2rem; }
     .contact-text { font-size: 1.15rem; }
+}
+.invite {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow: hidden;
+}
+
+.invite::before {
+    content: "";
+    position: absolute;
+    inset: -30px;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+        url("../images/Lianashop.jpg") center / cover no-repeat;
+    filter: blur(14px);
+}
+
+.invite-card {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    padding: 28px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.88);
+    text-align: center;
+}
+
+.invite-card input {
+    display: block;
+    width: 100%;
+    margin: 4px 0 12px;
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.invite-card button {
+    padding: 10px 28px;
+    border: 0;
+    border-radius: 10px;
+    background: #2f6fd6;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+main {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+footer {
+    margin-top: 0;
 }

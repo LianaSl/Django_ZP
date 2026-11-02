@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_content %}
+<link rel="stylesheet" href="{% static 'shop/css/cart.css' %}">
+
+<section class="cart-section">
+<div class="cart-page">
+    <div class="cart-box empty">
+        <h1 class="done-title">Děkujeme za objednávku!</h1>
+        <p>Číslo objednávky: <strong>#{{ order.id }}</strong></p>
+        <p>Celkem: <strong>{{ order.total|floatformat:"-2" }} Kč</strong></p>
+        <p>Způsob platby: {{ order.get_payment_method_display }}</p>
+        <p>Stav: {{ order.get_status_display }}</p>
+        <a href="{% url 'products_page' %}">Zpět do katalogu</a>
+    </div>
+</div>
+</section>
+{% endblock main_content %}

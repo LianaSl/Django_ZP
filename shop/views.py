@@ -1,20 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from shop.models import Product
-from .forms import CategoryForm, ProductCreateForm, LoginForm
+from django.views.decorators.http import require_POST
+
+from shop.models import Product, Order, OrderItem
+from .forms import (
+    CategoryForm, ProductCreateForm, LoginForm, RegisterForm, CheckoutForm,
+)
 from .mixins import AdminRequiredMixin
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page  
+
+User = get_user_model()
 
 
+# ---------------------------------------------------------------- pages
 
 class HomePageRedirect(RedirectView):
     url = reverse_lazy("home_page")
@@ -25,7 +30,7 @@ class HomeView(View):
 
     def get(self, request, *args, **kwargs):
         color = request.COOKIES.get("my_color", )
-        context = {         
+        context = {
         }
         return render(request, "shop/home.html", context)
 
@@ -56,14 +61,6 @@ class AboutUsView(View):
             form = CategoryForm()
         return render(request, "shop/about_us.html", {"form": form})
 
-@method_decorator(cache_page(90),name= "dispatch")
-class ProductsListView(LoginRequiredMixin, ListView):
-    template_name = "shop/products.html"
-    model = Product
-    context_object_name = "products"
-    # paginate_by = 3
-    ordering = ["price"]
-
 
 def hello(request, name):
     return HttpResponse(f"HELLO{name}")
@@ -71,6 +68,16 @@ def hello(request, name):
 
 def contacts_page(request):
     return render(request, "shop/contacts_page.html")
+
+
+# ---------------------------------------------------------------- products
+
+class ProductsListView(ListView):
+    template_name = "shop/products.html"
+    model = Product
+    context_object_name = "products"
+    # paginate_by = 3
+    ordering = ["price"]
 
 
 class ProductDetailView(DetailView):
@@ -101,6 +108,8 @@ class ProductDeleteView(AdminRequiredMixin, DeleteView):
     success_url = reverse_lazy("products_page")
 
 
+# ---------------------------------------------------------------- login / register
+
 def login_view(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -112,15 +121,16 @@ def login_view(request):
     return render(request, "shop/login.html", {"form": form})
 
 
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("products_page")
-    else:
-        form = UserCreationForm()
-    return render(request, "shop/register.html", {"form": form})
+class RegisterView(CreateView):
+    form_class = RegisterForm
+    template_name = "shop/register.html"
+    success_url = reverse_lazy("products_page")
+
+
+# ---------------------------------------------------------------- cart
+
+FREE_SHIPPING_FROM = 1500   # free shipping from this amount (Kč)
+SHIPPING_PRICE = 99         # shipping price (Kč)
 
 
 def add_cart(request, id):
@@ -134,12 +144,142 @@ def add_cart(request, id):
     return redirect("products_page")
 
 
+def get_cart_items(request):
+    cart = request.session.get("cart", {})
+    items, total = [], 0
+    for p in Product.objects.filter(id__in=cart.keys()):
+        qty = cart[str(p.id)]
+        items.append({"product": p, "qty": qty, "sum": p.price * qty})
+        total += p.price * qty
+    return items, total
+
+
+def cart_context(request, form=None):
+    items, total = get_cart_items(request)
+    shipping = 0 if (total >= FREE_SHIPPING_FROM or not items) else SHIPPING_PRICE
+    return {
+        "items": items,
+        "total": total,
+        "shipping": shipping,
+        "grand_total": total + shipping,
+        "free_from": FREE_SHIPPING_FROM,
+        "form": form or CheckoutForm(),
+    }
+
+
 class CartTemplateView(TemplateView):
     template_name = "shop/cart_page.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart = self.request.session.get("cart", {})
-        products = Product.objects.filter(id__in=cart.keys())
-        context["products"] = products
+        context.update(cart_context(self.request))
         return context
+
+
+@require_POST
+def cart_increase(request, id):
+    product = get_object_or_404(Product, id=id)
+    cart = request.session.get("cart", {})
+    key = str(product.id)
+    if cart.get(key, 0) < product.quantity:
+        cart[key] = cart.get(key, 0) + 1
+    request.session["cart"] = cart
+    return redirect("cart")
+
+
+@require_POST
+def cart_decrease(request, id):
+    cart = request.session.get("cart", {})
+    key = str(id)
+    if key in cart:
+        cart[key] -= 1
+        if cart[key] <= 0:
+            del cart[key]
+    request.session["cart"] = cart
+    return redirect("cart")
+
+
+@require_POST
+def cart_remove(request, id):
+    cart = request.session.get("cart", {})
+    cart.pop(str(id), None)
+    request.session["cart"] = cart
+    return redirect("cart")
+
+
+@require_POST
+def cart_clear(request):
+    request.session["cart"] = {}
+    return redirect("cart")
+
+
+# ---------------------------------------------------------------- order
+
+class CheckoutError(Exception):
+    pass
+
+
+@login_required
+@require_POST
+def checkout(request):
+    items, total = get_cart_items(request)
+    if not items:
+        return redirect("cart")
+
+    form = CheckoutForm(request.POST)
+    if not form.is_valid():
+        return render(request, "shop/cart_page.html", cart_context(request, form))
+
+    ctx = cart_context(request, form)
+    shipping, grand_total = ctx["shipping"], ctx["grand_total"]
+
+    try:
+        with transaction.atomic():
+            # lock products and check stock
+            locked = {}
+            for i in items:
+                p = Product.objects.select_for_update().get(pk=i["product"].pk)
+                if i["qty"] > p.quantity:
+                    raise CheckoutError(
+                        f"Nedostatek zboží: {p.name} (skladem {p.quantity} ks)."
+                    )
+                locked[p.pk] = p
+
+            order = form.save(commit=False)
+            order.user = request.user
+            order.shipping_price = shipping
+            order.total = grand_total
+
+            # pay from balance
+            if order.payment_method == "balance":
+                user = User.objects.select_for_update().get(pk=request.user.pk)
+                if user.balance < grand_total:
+                    raise CheckoutError("Na účtu není dostatek prostředků.")
+                user.balance -= grand_total
+                user.save(update_fields=["balance"])
+                order.status = "paid"
+
+            order.save()
+            for i in items:
+                p = locked[i["product"].pk]
+                OrderItem.objects.create(
+                    order=order,
+                    product=p,
+                    product_name=p.name,
+                    price=p.price,
+                    quantity=i["qty"],
+                )
+                p.quantity -= i["qty"]
+                p.save(update_fields=["quantity"])
+    except CheckoutError as e:
+        form.add_error(None, str(e))
+        return render(request, "shop/cart_page.html", ctx)
+
+    request.session["cart"] = {}
+    return redirect("order_success", id=order.id)
+
+
+@login_required
+def order_success(request, id):
+    order = get_object_or_404(Order, id=id, user=request.user)
+    return render(request, "shop/order_success.html", {"order": order})

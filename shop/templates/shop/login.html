@@ -1,11 +1,24 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block main_content %}
+<link rel="stylesheet" href="{% static 'shop/css/login.css' %}">
 
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Войти</button>
-</form>
+<section class="invite">
+    <div class="invite-card">
+        <h1>Vítejte v internetovém obchodě „FLORENTINA“</h1>
+        <p>Přihlaste se, abyste mohli prohlížet katalog a objednávat.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Přihlásit se</button>
+        </form>
+
+        <p class="invite-link">
+            Nemáte účet? <a href="{% url 'register' %}">Zaregistrujte se</a>
+        </p>
+    </div>
+</section>
 
 {% endblock main_content %}

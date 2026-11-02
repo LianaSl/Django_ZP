@@ -5,43 +5,38 @@
     <link rel="stylesheet" href="{% static 'shop/css/style_products_page.css' %}">
 
     <div class="catalog-header">
-        <a href="{% url 'cart' %}" class="cart-link">Корзина</a>
+        <a href="{% url 'cart' %}" class="cart-link">Košík</a>
     </div>
 
     <ul class="Products_list">
         {% for prod in products %}
             <li class="product_item">
-                
-                <!-- Ссылка на детальную страницу (Картинка + Название) -->
                 <a href="{% url 'product_detail' id=prod.id %}" class="product-card-link">
                     <div class="product-image-box">
                         {% if prod.image %}
                             <img src="{{ prod.image.url }}" alt="{{ prod.name }}" class="product-img">
                         {% else %}
-                            <div class="no-photo">Нет фото</div>
+                            <div class="no-photo">Bez fotky</div>
                         {% endif %}
                     </div>
-                    <!-- ИСПРАВЛЕНО: используем prod.name вместо title -->
                     <h2 class="product-title">{{ prod.name }}</h2>
                 </a>
 
                 <div class="product-bottom">
                     <span class="product-price">{{ prod.price }} CZK</span>
 
-                    <!-- Кнопка добавления в корзину -->
                     <form action="{% url 'cart_product' id=prod.id %}" method="post" class="cart-form">
                         {% csrf_token %}
                         <button type="submit" class="buy-btn">Do košíku</button>
                     </form>
 
-                    <!-- Админ-панель -->
                     {% if user.is_superuser %}
                         <div class="admin-actions">
-                            <a href="{% url 'update_product' id=prod.id %}" class="admin-link">Редактировать</a>
+                            <a href="{% url 'update_product' id=prod.id %}" class="admin-link">Upravit</a>
                             <form action="{% url 'product_delete' id=prod.id %}" method="post"
-                                  onsubmit="return confirm('Удалить товар?');" style="display:inline;">
+                                  onsubmit="return confirm('Smazat produkt?');" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="delete-btn">Удалить</button>
+                                <button type="submit" class="delete-btn">Smazat</button>
                             </form>
                         </div>
                     {% endif %}

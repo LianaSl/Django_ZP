@@ -1,13 +1,102 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block main_content %}
+<link rel="stylesheet" href="{% static 'shop/css/cart.css' %}">
 
-{% for product in products %}
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.price }}</p>
-    <p>{{ product.description }}</p>
-{% empty %}
-    <p>Корзина пуста</p>
-{% endfor %}
+<section class="cart-section">
+<div class="cart-page">
+    <h1>Košík</h1>
 
+    {% if items %}
+    <div class="cart-layout">
+
+        <div class="cart-left">
+            {% for i in items %}
+            <div class="cart-item">
+                <div class="item-img">
+                    {% if i.product.image %}
+                        <img src="{{ i.product.image.url }}" alt="{{ i.product.name }}">
+                    {% endif %}
+                </div>
+
+                <div class="item-info">
+                    <strong>{{ i.product.name }}</strong>
+                    <span class="item-price">{{ i.product.price|floatformat:"-2" }} Kč</span>
+                    <div class="qty">
+                        <form method="post" action="{% url 'cart_decrease' i.product.id %}">
+                            {% csrf_token %}<button type="submit">−</button>
+                        </form>
+                        <span>{{ i.qty }}</span>
+                        <form method="post" action="{% url 'cart_increase' i.product.id %}">
+                            {% csrf_token %}<button type="submit">+</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="item-side">
+                    <span class="item-sum">{{ i.sum|floatformat:"-2" }} Kč</span>
+                    <form method="post" action="{% url 'cart_remove' i.product.id %}">
+                        {% csrf_token %}<button type="submit" class="btn-light">Odstranit</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+            <form method="post" action="{% url 'cart_clear' %}" class="clear-form">
+                {% csrf_token %}<button type="submit" class="btn-light">Vyprázdnit košík</button>
+            </form>
+
+            <a class="back-link" href="{% url 'products_page' %}">← Pokračovat v nákupu</a>
+        </div>
+
+        <aside class="cart-right">
+            <div class="cart-box">
+                <h2>Souhrn</h2>
+                <p>Zboží: {{ total|floatformat:"-2" }} Kč</p>
+                <p>Doprava: {% if shipping == 0 %}zdarma{% else %}{{ shipping }} Kč{% endif %}</p>
+                <p class="grand"><strong>Celkem k úhradě: {{ grand_total|floatformat:"-2" }} Kč</strong></p>
+                {% if shipping %}
+                    <p><small>Doprava zdarma od {{ free_from }} Kč.</small></p>
+                {% endif %}
+                <p><small>Všechny ceny jsou uvedeny včetně DPH.</small></p>
+            </div>
+
+            <div class="cart-box">
+                <h2>Doručení a platba</h2>
+
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'checkout' %}" class="checkout-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="form-error">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    {% for field in form %}
+                    <div class="field-wrap">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for e in field.errors %}<small class="err">{{ e }}</small>{% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn-send">Objednat</button>
+                </form>
+                {% else %}
+                    <p>Pro dokončení objednávky se prosím <a href="{% url 'login' %}">přihlaste</a>.</p>
+                {% endif %}
+            </div>
+        </aside>
+
+    </div>
+
+    {% else %}
+        <div class="cart-box empty">
+            <p>Váš košík je prázdný.</p>
+            <a href="{% url 'products_page' %}">Přejít na produkty</a>
+        </div>
+    {% endif %}
+</div>
+</section>
 {% endblock main_content %}

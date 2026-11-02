@@ -16,18 +16,26 @@
     <header class="header">
         <nav class="nav">
             <ul>
-                <li><a href="{% url 'home_page' %}">Hlavni</a></li>
-               <li><a href="{% url 'products_page' %}">Katalog</a></li>
-                <li><a href="{% url 'home_page' %}">KOsik</a></li>
-                <li><a href="{% url 'home_page' %}">K pokladne</a></li>
-                <li><a href="{% url 'contacts_page' %}">KONTAKT</a></li>
+                <li><a href="{% url 'home_page' %}">Hlavní</a></li>
+                <li><a href="{% url 'products_page' %}">Katalog</a></li>
+                <li>
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'logout' %}" method="post" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn">Odhlásit se</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}">Přihlášení</a>
+                    {% endif %}
+                </li>
+                <li><a href="{% url 'cart' %}">Košík</a></li>
+                <li><a href="{% url 'contacts_page' %}">Kontakt</a></li>
             </ul>
         </nav>
     </header>
-    
-   {% block main_content %}
-   
-   {% endblock main_content %}
+
+    {% block main_content %}
+    {% endblock main_content %}
 
     <footer class="footer">
         <div>© created by <a href="mailto:sljonkina@gmail.com">Liana Šljonkina</a></div>

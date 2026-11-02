@@ -1,0 +1,209 @@
+
+  body {
+    background: #d6e6f3;
+  }
+
+  .contact-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 50px 20px;
+    background-color: #d6e6f3;
+    background-image: url("{% static 'shop/images/contact-bg.jpeg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .contact-page {
+    min-height: calc(100vh - 136px - 166px);
+    box-sizing: border-box;
+}
+
+  .contact-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  background: linear-gradient(135deg, #f09292 0%, #6fa3c0 50%, #3a7bd5 100%);
+}
+
+  .contact-block {
+    width: 100%;
+    max-width: 760px;
+    padding: 45px 40px;
+    box-sizing: border-box;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 25px;
+    box-shadow: 0 0 30px rgba(240, 120, 130, 0.45);
+    font-family: "EB Garamond", serif;
+    color: #0b6fb5;
+  }
+
+  .contact-title {
+    margin: 0 0 20px;
+    font-family: "Playfair Display", serif;
+    font-size: 2.8rem;
+    color: #0b6fb5;
+  }
+
+  .contact-text {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.7;
+  }
+
+  .divider {
+    height: 3px;
+    width: 60%;
+    margin: 28px auto;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #3a7bd5, #f09090);
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+
+  .social-link,
+  .btn-contact,
+  .btn-send {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 26px;
+    font-family: inherit;
+    font-size: 1.3rem;
+    color: #0b6fb5;
+    text-decoration: none;
+    background: #d6e6f3;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(240, 120, 130, 0.5);
+    cursor: pointer;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .social-link:visited {
+    color: #0b6fb5;
+  }
+
+  .social-link:hover,
+  .btn-contact:hover,
+  .btn-send:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 24px rgba(240, 120, 130, 0.9);
+  }
+
+  .btn-contact {
+    font-size: 1.4rem;
+    padding: 12px 34px;
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    background: rgba(11, 60, 110, 0.55);
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal {
+    position: relative;
+    width: 90%;
+    max-width: 480px;
+    padding: 35px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(240, 120, 130, 0.6);
+    font-family: "EB Garamond", serif;
+    color: #0b6fb5;
+  }
+
+  .modal h2 {
+    margin: 0 0 20px;
+    text-align: center;
+    font-family: "Playfair Display", serif;
+    font-size: 1.9rem;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    font-size: 2rem;
+    line-height: 1;
+    color: #0b6fb5;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .field-wrap {
+    margin-bottom: 15px;
+  }
+  .field-wrap label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+  }
+
+  .field-wrap input,
+  .field-wrap textarea {
+    width: 100%;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1.1rem;
+    color: #0b4f86;
+    background: #f4f9fd;
+    border: 1px solid #9bb8d3;
+    border-radius: 10px;
+  }
+
+  .field-wrap input:focus,
+  .field-wrap textarea:focus {
+    outline: none;
+    border-color: #f09090;
+    box-shadow: 0 0 8px rgba(240, 120, 130, 0.5);
+  }
+
+  .field-wrap textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  .btn-send {
+    display: flex;
+    margin: 10px auto 0;
+  }
+  .success-msg {
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 600px) {
+    .contact-block {
+      padding: 30px 20px;
+    }
+    .contact-title {
+      font-size: 2.2rem;
+    }
+    .contact-text {
+      font-size: 1.15rem;
+    }
+  }

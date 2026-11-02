@@ -1,22 +1,26 @@
-
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 
 {% block main_content %}
+<link rel="stylesheet" href="{% static 'shop/css/cart.css' %}">
 
-   <ul class="Products_list">         {% if product %}
-             
-       
-         <li class="product_item">
-             <h1>{{ prod.title }}</h1>
-             <p>{{ product.description }}</p>
-             <span>{{ product.price }}</span>
-             <span>{{ product.quantity }}</span>
-             
-             </li>
-              {% else %}
-                <p style="color: red;">Product not found.</p>
+<section class="cart-section">
+<div class="cart-page">
+    <div class="cart-box">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:300px;">
+        {% endif %}
+        <h1>{{ product.name }}</h1>
+        <p><strong>{{ product.price|floatformat:"-2" }} Kč</strong></p>
+        <p>Skladem: {{ product.quantity }} ks</p>
 
-              {% endif %}
-   
-   </ul>
- {% endblock main_content %}
+        <form action="{% url 'cart_product' id=product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-send">Do košíku</button>
+        </form>
+
+        <a href="{% url 'products_page' %}">← Zpět do katalogu</a>
+    </div>
+</div>
+</section>
+{% endblock main_content %}
