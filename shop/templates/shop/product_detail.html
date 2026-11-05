@@ -7,19 +7,29 @@
 <section class="cart-section">
 <div class="cart-page">
     <div class="cart-box">
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:300px;">
-        {% endif %}
-        <h1>{{ product.name }}</h1>
-        <p><strong>{{ product.price|floatformat:"-2" }} Kč</strong></p>
-        <p>Skladem: {{ product.quantity }} ks</p>
+        <div class="product-layout">
 
-        <form action="{% url 'cart_product' id=product.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn-send">Do košíku</button>
-        </form>
+            <div class="product-photo">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% endif %}
+            </div>
 
-        <a href="{% url 'products_page' %}">← Zpět do katalogu</a>
+            <div class="product-info">
+                <h1 class="product-name">{{ product.name }}</h1>
+                <p class="product-description">{{ product.description }}</p>
+                <p class="product-price"><strong>{{ product.price|floatformat:"-2" }} Kč</strong></p>
+                <p>Skladem: {{ product.quantity }} ks</p>
+
+                <form action="{% url 'cart_product' id=product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-send">Do košíku</button>
+                </form>
+
+                <p><a href="{% url 'products_page' %}">← Zpět do katalogu</a></p>
+            </div>
+
+        </div>
     </div>
 </div>
 </section>

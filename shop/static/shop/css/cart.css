@@ -234,3 +234,48 @@
         align-items: center;
     }
 }
+.cart-box h1.product-name {
+    color: rgb(5, 114, 187);
+    text-shadow: none;
+}
+
+.product-layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+.product-photo {
+    flex: 0 0 300px;
+    max-width: 100%;
+}
+
+.product-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.product-info {
+    flex: 1 1 320px;
+    text-align: left;
+}
+
+.cart-box h1.product-name {
+    margin-top: 0;
+    text-align: left;
+    color: rgb(5, 114, 187);
+    text-shadow: none;
+}
+
+.product-description {
+    margin-bottom: 18px;
+    font-size: 1.25rem;
+    line-height: 1.6;
+}
+
+.product-price {
+    font-size: 1.5rem;
+}
