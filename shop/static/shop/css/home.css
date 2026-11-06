@@ -1,83 +1,97 @@
-/* ===== Фон страницы: мягкий градиент, в который растворяются края фото ===== */
+/* ===== Фон страницы ===== */
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(90deg, #f3c4c7 0%, #dbe6f3 50%, #9fc2f0 100%);
+    /* по бокам от фото те же цвета, что и на краях картинки */
+    background: linear-gradient(to right, rgb(231, 142, 144) 50%, rgb(48, 114, 211) 50%);
+    font-family: "EB Garamond", serif;
 }
 
-/* ===== Блок с фото ===== */
+/* ===== Блок с фото: на всю ширину, без маски, поэтому нет полос ===== */
 .hero {
+    /* высота = экран минус шапка (15vh) и подвал; ширина считается по пропорциям фото */
+    --hero-h: calc(85vh - 51px);
     position: relative;
-    width: 100%;
-    max-width: 1100px;
+    flex: none;
+    align-self: center;
+    width: min(100%, calc(var(--hero-h) * 1.7703));
     aspect-ratio: 2096 / 1184;
-    margin: 0 auto;
+    container-type: inline-size;   /* размеры текста считаем от ширины фото (cqw) */
+    margin: 0;
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
 }
 
-/* Само фото лежит отдельным слоем, чтобы размыть только его, а не текст */
 .hero::before {
     content: "";
     position: absolute;
     inset: 0;
     background: url("../images/LianaShop1.jpg") center / 100% 100% no-repeat;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
-/* ===== Текст ===== */
+/* ===== Текст на «стеклянной» плашке, как на первой странице ===== */
 .hero-content {
     position: relative;
     z-index: 1;
-    width: 45%;
-    padding: 5% 48px 0;
-    color: #fff;
+    width: 44%;
+    margin: 3% 6% 0 0;
+    padding: 2.2cqw 3cqw 2.6cqw;
     text-align: center;
+    color: rgb(5, 114, 187);
+    background: linear-gradient(135deg, rgb(241, 200, 205), rgb(214, 229, 242));
+    border-radius: 2.2cqw;
+    box-shadow:
+        0 0 15px 5px rgb(241, 146, 146),
+        0 0 30px 10px rgb(99, 160, 184);
 }
 
 .hero-content h1 {
-    margin: 0 0 8px;
-    font-family: "Playfair Display", serif;
-    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    margin: 0 0 1.2cqw;
+    font-family: "EB Garamond", serif;
+    font-weight: 500;
+    font-size: 3.8cqw;
+    line-height: 1.1;
+    text-wrap: balance;
+    color: rgb(13, 63, 143);
 }
 
 .hero-content p {
-    margin: 0 0 16px;
-    font-size: clamp(1rem, 1.4vw, 1.25rem);
-    line-height: 1.35;
+    margin: 0 0 1.6cqw;
+    font-family: "EB Garamond", serif;
+    font-size: 2.1cqw;
+    line-height: 1.3;
 }
 
 /* ===== Кнопки со свечением ===== */
 .hero-buttons {
     display: flex;
-    gap: 16px;
+    gap: 1.6cqw;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .hero-buttons a {
-    padding: 8px 28px;
-    border-radius: 16px;
-    background: #d6e6f3;
-    color: #0a72c2;
-    font-size: 1.4rem;
+    padding: 0.8cqw 2.6cqw;
+    border-radius: 2cqw;
+    background: rgb(214, 229, 242);
+    color: rgb(5, 114, 187);
+    font-family: "EB Garamond", serif;
+    font-size: 2.4cqw;
     text-decoration: none;
-    border: 2px solid rgba(240, 147, 147, 0.9);
+    border: none;
     box-shadow:
-        0 0 10px 4px rgba(240, 147, 147, 0.85),
-        0 10px 22px rgba(58, 123, 221, 0.45);
-    transition: box-shadow 0.2s, transform 0.2s;
+        0 0 15px 5px rgb(241, 146, 146),
+        0 0 30px 10px rgb(99, 160, 184);
+    transition: transform 0.3s ease;
 }
 
 .hero-buttons a:hover {
-    background: #fff;
-    transform: translateY(-2px);
-    box-shadow:
-        0 0 14px 6px rgba(240, 147, 147, 1),
-        0 12px 26px rgba(58, 123, 221, 0.55);
+    background: rgb(214, 229, 242);
+    transform: scale(1.05);
 }
 
 /* ===== Футер: низкий и прижат к низу ===== */
@@ -86,15 +100,18 @@ footer.footer {
     height: auto;
     min-height: 0;
     padding: 14px 32px;
-    font-size: 1rem;
+    font-family: "EB Garamond", serif;
+    font-size: 1.1rem;
 }
 footer.footer a { color: #fff; }
 
 /* ===== Телефон ===== */
 @media (max-width: 700px) {
     .hero {
+        align-self: stretch;
+        width: 100%;
         aspect-ratio: auto;
-        min-height: 480px;
+        min-height: 520px;
         align-items: flex-end;
         justify-content: center;
     }
@@ -105,9 +122,13 @@ footer.footer a { color: #fff; }
         mask-image: none;
     }
     .hero-content {
-        width: 100%;
-        padding: 20px 16px;
-        background: rgba(30, 90, 190, 0.75);
+        width: calc(100% - 32px);
+        margin: 0 16px 20px;
+        padding: 16px;
+        border-radius: 20px;
     }
-    .hero-buttons a { font-size: 1.1rem; padding: 6px 20px; }
+    .hero-content h1 { font-size: 1.7rem; margin-bottom: 8px; }
+    .hero-content p { font-size: 1.1rem; margin-bottom: 14px; }
+    .hero-buttons { gap: 14px; }
+    .hero-buttons a { font-size: 1.2rem; padding: 6px 20px; border-radius: 16px; }
 }
