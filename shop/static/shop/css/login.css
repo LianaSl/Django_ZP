@@ -1,63 +1,92 @@
+/* ===== Страница входа / регистрации — в стиле главной ===== */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* по бокам от фото те же цвета, что и на краях картинки */
+    background: linear-gradient(to right, rgb(231, 142, 144) 50%, rgb(48, 114, 211) 50%);
+    font-family: "EB Garamond", serif;
+}
+
 .invite {
+    /* высота фото = экран минус шапка и подвал; ширина — по пропорциям картинки */
+    --hero-h: calc(85vh - 51px);
+    --w: min(100vw, calc(var(--hero-h) * 1.7703));
     position: relative;
+    flex: none;
     width: 100%;
-    min-height: 70vh;
+    min-height: var(--hero-h);
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 35px 8vw;
-    overflow: hidden;
+    padding: 12px 0;
+    /* карточка прижата к правому краю фото */
+    padding-right: calc((100vw - var(--w)) / 2 + var(--w) * 0.05);
+    overflow: visible;           /* сброс старого overflow: hidden из style.css */
     font-family: "EB Garamond", serif;
 }
-/* размытый фон с затемнением */
+
+/* фото без затемнения и без размытия, края растворяются в фоне */
 .invite::before {
     content: "";
+    filter: none;                /* сброс старого blur из style.css */
+    inset: auto;                 /* сброс старого inset: -30px из style.css */
     position: absolute;
-    inset: -30px;
-    background:
-        linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
-        url("../images/Lianashop.jpg") center / cover no-repeat;
-    filter: blur(1px);
+    top: 0;
+    left: 50%;
+    width: var(--w);
+    height: var(--hero-h);
+    transform: translateX(-50%);
+    background: url("../images/Lianashop.jpg") center / contain no-repeat;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
-/* карточка по центру */
+/* ===== Карточка с формой ===== */
 .invite-card {
     position: relative;
-    width: 100%;
-    max-width: 420px;
-    padding: 34px 30px;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow: 0 0 30px rgba(240, 120, 130, 0.45);
+    z-index: 1;
+    width: clamp(300px, calc(var(--w) * 0.40), 440px);
+    max-width: none;
+    padding: 20px 26px 22px;
     text-align: center;
-    color: #0b6fb5;
+    color: rgb(5, 114, 187);
+    background: linear-gradient(135deg, rgb(241, 200, 205), rgb(214, 229, 242));
+    border-radius: 20px;
+    box-shadow:
+        0 0 15px 5px rgb(241, 146, 146),
+        0 0 30px 10px rgb(99, 160, 184);
 }
 
 .invite-card h1 {
-    margin-bottom: 12px;
-    font-family: "Playfair Display", serif;
-    font-size: 2rem;
-    line-height: 1.2;
+    margin-bottom: 8px;
+    font-family: "EB Garamond", serif;
+    font-weight: 500;
+    font-size: 1.7rem;
+    line-height: 1.15;
+    color: rgb(13, 63, 143);
 }
 
 .invite-card p {
-    margin-bottom: 20px;
-    font-size: 1.2rem;
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+    line-height: 1.25;
 }
 
 /* поля формы */
 .invite-card label {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     text-align: left;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .invite-card input {
     display: block;
     width: 100%;
-    margin-bottom: 14px;
-    padding: 10px 12px;
+    margin-bottom: 8px;
+    padding: 7px 12px;
     font: inherit;
     color: #0b4f86;
     background: #f4f9fd;
@@ -73,48 +102,46 @@
 
 /* кнопка */
 .invite-card button {
-    margin-top: 6px;
-    padding: 10px 34px;
+    margin-top: 4px;
+    padding: 7px 32px;
     font: inherit;
-    font-size: 1.3rem;
-    color: #0b6fb5;
-    background: #d6e6f3;
+    font-size: 1.25rem;
+    color: rgb(5, 114, 187);
+    background: rgb(214, 229, 242);
     border: 0;
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(240, 120, 130, 0.5);
+    border-radius: 20px;
+    box-shadow:
+        0 0 15px 5px rgb(241, 146, 146),
+        0 0 30px 10px rgb(99, 160, 184);
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease;
 }
 
 .invite-card button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 24px rgba(240, 120, 130, 0.9);
+    transform: scale(1.05);
 }
 
 /* ссылка на регистрацию */
 .invite-link {
-    margin-top: 18px;
+    margin-top: 12px;
     margin-bottom: 0;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
 .invite-link a {
-    color: #0b6fb5;
+    color: rgb(13, 63, 143);
     font-weight: 600;
 }
 
-@media (max-width: 600px) {
-    .invite-card h1 { font-size: 1.6rem; }
-}
 /* подсказки под полями */
 .invite-card .helptext,
 .invite-card ul {
-    margin: 0 0 8px;
+    margin: 0 0 6px;
     padding: 0;
     list-style: none;
     text-align: left;
-    font-size: 0.85rem;
-    line-height: 1.3;
+    font-size: 0.8rem;
+    line-height: 1.25;
     opacity: 0.8;
 }
 
@@ -124,11 +151,43 @@
 
 /* ошибки формы */
 .invite-card .errorlist {
-    margin: 0 0 8px;
+    margin: 0 0 6px;
     padding: 0;
     list-style: none;
     text-align: left;
     font-size: 0.95rem;
     color: #c0392b;
     opacity: 1;
+}
+
+/* ===== Футер прижат к низу ===== */
+footer.footer {
+    margin-top: auto;
+    height: auto;
+    min-height: 0;
+    padding: 14px 32px;
+    font-family: "EB Garamond", serif;
+    font-size: 1.1rem;
+}
+footer.footer a { color: #fff; }
+
+/* ===== Телефон: фото сверху, форма под ним ===== */
+@media (max-width: 700px) {
+    .invite {
+        min-height: 0;
+        display: block;
+        padding: 230px 16px 24px;
+    }
+    .invite::before {
+        left: 0;
+        width: 100%;
+        height: 230px;
+        transform: none;
+        background-size: cover;
+        background-position: 15% top;
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+    .invite-card { width: 100%; max-width: 440px; margin: 0 auto; }
+    .invite-card h1 { font-size: 1.5rem; }
 }

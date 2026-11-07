@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block main_content %}
-<link rel="stylesheet" href="{% static 'shop/css/login.css' %}">
+{% block css %}
+    <link rel="stylesheet" href="{% static 'shop/css/login.css' %}">
+{% endblock %}
 
+{% block main_content %}
 <section class="invite">
     <div class="invite-card">
         <h1>Vítejte v internetovém obchodě „FLORENTINA“</h1>
