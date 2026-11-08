@@ -1,16 +1,13 @@
-/* ===== Страница входа / регистрации — в стиле главной ===== */
-
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* по бокам от фото те же цвета, что и на краях картинки */
     background: linear-gradient(to right, rgb(231, 142, 144) 50%, rgb(48, 114, 211) 50%);
     font-family: "EB Garamond", serif;
 }
 
 .invite {
-    /* высота фото = экран минус шапка и подвал; ширина — по пропорциям картинки */
+   
     --hero-h: calc(85vh - 51px);
     --w: min(100vw, calc(var(--hero-h) * 1.7703));
     position: relative;
@@ -21,17 +18,16 @@ body {
     align-items: center;
     justify-content: flex-end;
     padding: 12px 0;
-    /* карточка прижата к правому краю фото */
     padding-right: calc((100vw - var(--w)) / 2 + var(--w) * 0.05);
-    overflow: visible;           /* сброс старого overflow: hidden из style.css */
+    overflow: visible;           
     font-family: "EB Garamond", serif;
 }
 
-/* фото без затемнения и без размытия, края растворяются в фоне */
+
 .invite::before {
     content: "";
-    filter: none;                /* сброс старого blur из style.css */
-    inset: auto;                 /* сброс старого inset: -30px из style.css */
+    filter: none;                
+    inset: auto;                 
     position: absolute;
     top: 0;
     left: 50%;
@@ -43,7 +39,7 @@ body {
     mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
-/* ===== Карточка с формой ===== */
+
 .invite-card {
     position: relative;
     z-index: 1;
@@ -74,7 +70,7 @@ body {
     line-height: 1.25;
 }
 
-/* поля формы */
+
 .invite-card label {
     display: block;
     margin-bottom: 2px;
@@ -100,7 +96,6 @@ body {
     box-shadow: 0 0 8px rgba(240, 120, 130, 0.5);
 }
 
-/* кнопка */
 .invite-card button {
     margin-top: 4px;
     padding: 7px 32px;
@@ -121,7 +116,7 @@ body {
     transform: scale(1.05);
 }
 
-/* ссылка на регистрацию */
+
 .invite-link {
     margin-top: 12px;
     margin-bottom: 0;
@@ -133,7 +128,7 @@ body {
     font-weight: 600;
 }
 
-/* подсказки под полями */
+
 .invite-card .helptext,
 .invite-card ul {
     margin: 0 0 6px;
@@ -149,7 +144,7 @@ body {
     margin-bottom: 2px;
 }
 
-/* ошибки формы */
+
 .invite-card .errorlist {
     margin: 0 0 6px;
     padding: 0;
@@ -160,7 +155,6 @@ body {
     opacity: 1;
 }
 
-/* ===== Футер прижат к низу ===== */
 footer.footer {
     margin-top: auto;
     height: auto;
@@ -171,7 +165,7 @@ footer.footer {
 }
 footer.footer a { color: #fff; }
 
-/* ===== Телефон: фото сверху, форма под ним ===== */
+
 @media (max-width: 700px) {
     .invite {
         min-height: 0;

@@ -19,7 +19,7 @@ from .mixins import AdminRequiredMixin
 User = get_user_model()
 
 
-# ---------------------------------------------------------------- pages
+# pages
 
 class HomePageRedirect(RedirectView):
     url = reverse_lazy("home_page")
@@ -70,7 +70,7 @@ def contacts_page(request):
     return render(request, "shop/contacts_page.html")
 
 
-# ---------------------------------------------------------------- products
+#  products
 
 class ProductsListView(ListView):
     template_name = "shop/products.html"
@@ -108,7 +108,7 @@ class ProductDeleteView(AdminRequiredMixin, DeleteView):
     success_url = reverse_lazy("products_page")
 
 
-# ---------------------------------------------------------------- login / register
+#  login / register
 
 def login_view(request):
     if request.method == "POST":
@@ -127,7 +127,7 @@ class RegisterView(CreateView):
     success_url = reverse_lazy("products_page")
 
 
-# ---------------------------------------------------------------- cart
+#  cart
 
 FREE_SHIPPING_FROM = 1500   # free shipping from this amount (Kč)
 SHIPPING_PRICE = 99         # shipping price (Kč)
@@ -213,7 +213,7 @@ def cart_clear(request):
     return redirect("cart")
 
 
-# ---------------------------------------------------------------- order
+#  order
 
 class CheckoutError(Exception):
     pass
