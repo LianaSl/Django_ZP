@@ -3,29 +3,9 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import Category, Order, OrderItem, Product, User
 
-
-@admin.register(User)
-class CustomUserAdmin(UserAdmin):
-    fieldsets = UserAdmin.fieldsets + (
-        ('Zůstatek', {'fields': ('balance',)}),
-    )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Zůstatek', {'fields': ('balance',)}),
-    )
-    list_display = UserAdmin.list_display + ('balance',)
-
-
-@admin.register(Category)
-class AdminCategory(admin.ModelAdmin):
-    list_display = ('name', 'description')
-    search_fields = ('name',)
-
-
-@admin.register(Product)
-class AdminProducts(admin.ModelAdmin):
-    list_display = ('name', 'price', 'quantity', 'is_stock', 'category')
-    search_fields = ('name',)
-    list_filter = ('category',)
+admin.site.register(User, UserAdmin)
+admin.site.register(Category)
+admin.site.register(Product)
 
 
 class OrderItemInline(admin.TabularInline):
@@ -34,8 +14,7 @@ class OrderItemInline(admin.TabularInline):
 
 
 @admin.register(Order)
-class AdminOrder(admin.ModelAdmin):
-    list_display = ('id', 'user', 'created_at', 'status', 'payment_method', 'total')
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'created_at', 'status', 'total')
     list_filter = ('status', 'payment_method')
-    search_fields = ('user__username', 'full_name')
     inlines = [OrderItemInline]
