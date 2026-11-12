@@ -6,11 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
     {% block css %}{% endblock %}
-    <title>Liana Šljonkina — Portfolio</title>
+    <title>{% block title %}FLORENTINA{% endblock %}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* единый шрифт на всех страницах (стоит после всех css, поэтому перекрывает их) */
+        :root {
+            --font-main: "EB Garamond", Georgia, serif;
+        }
+
+        body,
+        body * {
+            font-family: var(--font-main) !important;
+        }
+
+        /* единый вид полей форм */
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="number"],
+        input[type="tel"],
+        select,
+        textarea {
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            border: 1px solid rgba(0, 114, 188, 0.35);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #0a6db0;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 140, 160, 0.6);
+        }
+
+        /* ошибки форм */
+        .errorlist {
+            list-style: none;
+            margin: 4px 0;
+            padding: 0;
+            color: #b02a2a;
+            font-size: 0.95rem;
+        }
+
+        /* сообщения (например, "Zboží bylo přidáno do košíku") */
+        .messages { max-width: 900px; margin: 16px auto 0; padding: 0 16px; }
+        .message {
+            padding: 12px 18px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            background: #eef6ff;
+            border: 1px solid #b9d6f5;
+            color: #234;
+            transition: opacity .5s;
+        }
+        .message.success { background: #eaf8ef; border-color: #a9dcb9; color: #1d5b33; }
+        .message.warning { background: #fff6e5; border-color: #f0d08a; color: #7a5410; }
+        .message.error { background: #fdecec; border-color: #f0a9a9; color: #8a2121; }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -33,6 +93,22 @@
             </ul>
         </nav>
     </header>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(function () {
+                document.querySelectorAll('.message').forEach(function (el) {
+                    el.style.opacity = '0';
+                    setTimeout(function () { el.remove(); }, 500);
+                });
+            }, 4000);
+        </script>
+    {% endif %}
 
     {% block main_content %}
     {% endblock main_content %}

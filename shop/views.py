@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -140,6 +141,9 @@ def add_cart(request, id):
     current_quantity = cart.get(product_id, 0)
     if current_quantity < product.quantity:
         cart[product_id] = current_quantity + 1
+        messages.success(request, f"Zboží „{product.name}“ bylo přidáno do košíku.")
+    else:
+        messages.warning(request, f"Více kusů „{product.name}“ už není skladem.")
     request.session["cart"] = cart
     return redirect("products_page")
 

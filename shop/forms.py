@@ -2,21 +2,21 @@ from django import forms
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from .models import Category, Product
-from django.contrib.auth.forms import UserCreationForm
-from .models import Category, Product, Order
 
+from .models import Category, Order, Product
+
+User = get_user_model()
 
 
 class MessageForm(forms.Form):
-    message = forms.CharField()
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    message = forms.CharField(label='Zpráva')
+    username = forms.CharField(label='Uživatelské jméno')
+    password = forms.CharField(label='Heslo', widget=forms.PasswordInput)
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
         if len(username) < 5:
-            raise ValidationError("User_name must be at least 5 characters long.")
+            raise ValidationError("Uživatelské jméno musí mít alespoň 5 znaků.")
         return username
 
 
@@ -30,9 +30,27 @@ class ProductCreateForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
+        error_messages = {
+            "price": {
+                "required": "Zadejte cenu.",
+                "invalid": "Zadejte platné číslo, například 199.90.",
+                "max_digits": "Cena má příliš mnoho číslic.",
+                "max_whole_digits": "Cena je příliš vysoká.",
+                "max_decimal_places": "Cena může mít nejvýše 2 desetinná místa.",
+            },
+            "name": {
+                "required": "Zadejte název produktu.",
+            },
+        }
 
 
 class RegisterForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        # UserCreationForm má ve výchozím stavu django.contrib.auth.models.User,
+        # proto musíme model přepsat na vlastní User.
+        model = User
+        fields = ("username",)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Uživatelské jméno'
@@ -45,8 +63,8 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    user_name = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    user_name = forms.CharField(label='Uživatelské jméno')
+    password = forms.CharField(label='Heslo', widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -60,9 +78,10 @@ class LoginForm(forms.Form):
         if username and password:
             user = authenticate(username=username, password=password)
             if user is None:
-                raise ValidationError("Invalid username or password.")
+                raise ValidationError("Nesprávné uživatelské jméno nebo heslo.")
             self.user = user
         return cleaned_data
+
 
 class CheckoutForm(forms.ModelForm):
     class Meta:
