@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model
@@ -12,9 +11,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.decorators.http import require_POST
 
 from shop.models import Product, Order, OrderItem
-from .forms import (
-    CategoryForm, ProductCreateForm, LoginForm, RegisterForm, CheckoutForm,
-)
+from .forms import ProductCreateForm, LoginForm, RegisterForm, CheckoutForm
 from .mixins import AdminRequiredMixin
 
 User = get_user_model()
@@ -30,10 +27,7 @@ class HomeView(View):
     http_method_names = ["get", "post"]
 
     def get(self, request, *args, **kwargs):
-        color = request.COOKIES.get("my_color", )
-        context = {
-        }
-        return render(request, "shop/home.html", context)
+        return render(request, "shop/home.html")
 
     def post(self, request, *args, **kwargs):
         color = request.POST.get("color")
@@ -43,28 +37,9 @@ class HomeView(View):
                 key="my_color",
                 value=color,
                 httponly=True,
-                samesite="Lax"
+                samesite="Lax",
             )
         return response
-
-
-class AboutUsView(View):
-    http_method_names = ["get", "post"]
-
-    def get(self, request, *args, **kwargs):
-        form = CategoryForm()
-        return render(request, "shop/about_us.html", {"form": form})
-
-    def post(self, request, *args, **kwargs):
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            form = CategoryForm()
-        return render(request, "shop/about_us.html", {"form": form})
-
-
-def hello(request, name):
-    return HttpResponse(f"HELLO{name}")
 
 
 def contacts_page(request):
@@ -77,7 +52,6 @@ class ProductsListView(ListView):
     template_name = "shop/products.html"
     model = Product
     context_object_name = "products"
-    # paginate_by = 3
     ordering = ["price"]
 
 
@@ -130,10 +104,11 @@ class RegisterView(CreateView):
 
 #  cart
 
-FREE_SHIPPING_FROM = 1500   # free shipping from this amount (Kč)
-SHIPPING_PRICE = 99         # shipping price (Kč)
+FREE_SHIPPING_FROM = 1500   # doprava zdarma od této částky (Kč)
+SHIPPING_PRICE = 99         # cena dopravy (Kč)
 
 
+@require_POST
 def add_cart(request, id):
     product = get_object_or_404(Product, id=id)
     cart = request.session.get("cart", {})
@@ -239,7 +214,7 @@ def checkout(request):
 
     try:
         with transaction.atomic():
-            # lock products and check stock
+            # zamknout produkty a zkontrolovat sklad
             locked = {}
             for i in items:
                 p = Product.objects.select_for_update().get(pk=i["product"].pk)
@@ -254,7 +229,7 @@ def checkout(request):
             order.shipping_price = shipping
             order.total = grand_total
 
-            # pay from balance
+            # platba ze zůstatku
             if order.payment_method == "balance":
                 user = User.objects.select_for_update().get(pk=request.user.pk)
                 if user.balance < grand_total:

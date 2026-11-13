@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 
 from .views import (
-    HomeView, ProductsListView, login_view, AboutUsView, hello,
+    HomeView, ProductsListView, login_view,
     ProductDetailView, ProductCreateView, ProductUpdateView,
     ProductDeleteView, RegisterView, contacts_page, add_cart, CartTemplateView,
     cart_increase, cart_decrease, cart_remove, cart_clear,
@@ -14,8 +14,6 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home_page'),
     path('products/', ProductsListView.as_view(), name='products_page'),
     path('products/<int:id>/', ProductDetailView.as_view(), name='product_detail'),
-    path('about/', AboutUsView.as_view(), name='about_us_page'),
-    path('hello/<str:name>/', hello, name='hello_page'),
     path('product/create/', ProductCreateView.as_view(), name='create_product'),
     path('product/update/<int:id>/', ProductUpdateView.as_view(), name='update_product'),
     path('product/delete/<int:id>/', ProductDeleteView.as_view(), name='product_delete'),
