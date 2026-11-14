@@ -101,4 +101,4 @@ class CheckoutForm(forms.ModelForm):
             "address": forms.TextInput(attrs={"placeholder": "Hlavní 12"}),
             "city": forms.TextInput(attrs={"placeholder": "Praha"}),
             "zip_code": forms.TextInput(attrs={"placeholder": "160 00"}),
-        }
+        }                                  
