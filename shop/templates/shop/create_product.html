@@ -1,11 +1,38 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if object %}Upravit produkt{% else %}Nový produkt{% endif %} – FLORENTINA{% endblock %}
 
 {% block main_content %}
+<link rel="stylesheet" href="{% static 'shop/css/cart.css' %}">
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Create Product</button>
-</form>
+<section class="cart-section">
+<div class="cart-page">
+    <div class="cart-box">
+        <h2>{% if object %}Upravit produkt{% else %}Nový produkt{% endif %}</h2>
 
+        <form method="post" enctype="multipart/form-data" class="checkout-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+            <div class="field-wrap">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for e in field.errors %}<small class="err">{{ e }}</small>{% endfor %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-send">
+                {% if object %}Uložit změny{% else %}Vytvořit produkt{% endif %}
+            </button>
+        </form>
+
+        <p><a href="{% url 'products_page' %}">← Zpět do katalogu</a></p>
+    </div>
+</div>
+</section>
 {% endblock main_content %}
