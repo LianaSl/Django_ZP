@@ -1,101 +1,100 @@
-# Django_ZP
-# LianaShop – internetový obchod „FLORENTINA“
+# LianaShop – online store "FLORENTINA"
 
-Studijní internetový obchod s parfémy a kosmetikou vytvořený v Djangu. Zákazník si prohlíží katalog, přidává zboží do košíku a objednává. Administrátor spravuje produkty a objednávky.
+A study online store with perfumes and cosmetics built with Django. Customers browse the catalogue, add items to the cart and place orders. The administrator manages products and orders.
 
-## Funkce
+## Features
 
-- Hlavní stránka a stránka s kontakty.
-- Registrace, přihlášení a odhlášení (vlastní uživatelský model `shop.User` se zůstatkem na účtu).
-- Katalog produktů s fotografií, názvem a cenou, řazení podle ceny.
-- Detail produktu s popisem, cenou a počtem kusů skladem.
-- Košík uložený v session. Při přidání zboží se kontroluje skladová zásoba a zobrazí se potvrzující zpráva.
-- Objednávka (pro přihlášené): doručovací údaje, platba ze zůstatku, bankovním převodem nebo dobírkou. Doprava zdarma od 1 500 Kč.
-- Stránka „Objednávka přijata“.
-- Pro administrátora (superuser): přidávání, úprava a mazání produktů, přehled objednávek v administraci.
-- Kontrola zadané ceny s jasnou chybovou zprávou u pole.
-- Uživatelské rozhraní v češtině.
+- Home page and contact page.
+- Registration, login and logout (custom user model `shop.User` with an account balance).
+- Product catalogue with photo, name and price, sorted by price.
+- Product detail with description, price and number of items in stock.
+- Cart stored in the session. Stock availability is checked when an item is added, and a confirmation message is shown.
+- Order (for logged-in users): delivery details, payment from account balance, bank transfer or cash on delivery. Free shipping from 1,500 CZK.
+- "Order received" page.
+- For the administrator (superuser): adding, editing and deleting products, overview of orders in the admin site.
+- Price validation with a clear error message next to the field.
+- User interface in Czech.
 
-## Technologie
+## Technologies
 
 - Python 3.12+, Django 6.1
 - PostgreSQL
-- HTML, CSS (bez frameworků)
-- Django session pro košík
+- HTML, CSS (no frameworks)
+- Django session for the cart
 
-## Stránky
+## Pages
 
-| Adresa | Co se otevře |
+| Address | What opens |
 |---|---|
-| `/shop/` | Hlavní stránka |
-| `/shop/products/` | Katalog |
-| `/shop/products/<id>/` | Detail produktu |
-| `/shop/cart/` | Košík a objednávka |
-| `/shop/order/<id>/done/` | Objednávka přijata |
-| `/shop/login/` | Přihlášení |
-| `/shop/register/` | Registrace |
-| `/shop/contacts/` | Kontakt |
-| `/shop/product/create/` | Přidání produktu (administrátor) |
-| `/admin/` | Administrace |
+| `/shop/` | Home page |
+| `/shop/products/` | Catalogue |
+| `/shop/products/<id>/` | Product detail |
+| `/shop/cart/` | Cart and checkout |
+| `/shop/order/<id>/done/` | Order received |
+| `/shop/login/` | Login |
+| `/shop/register/` | Registration |
+| `/shop/contacts/` | Contact |
+| `/shop/product/create/` | Add product (administrator) |
+| `/admin/` | Administration |
 
-## Spuštění
+## Running the project
 
-1. Vytvořte a aktivujte virtuální prostředí:
+1. Create and activate a virtual environment:
 
    ```
    python -m venv venv
    venv\Scripts\activate
    ```
 
-2. Nainstalujte závislosti:
+2. Install the dependencies:
 
    ```
    pip install -r requirements.txt
    ```
 
-3. Vytvořte databázi PostgreSQL a zadejte její údaje do souboru `config/settings.py`, do sekce `DATABASES`.
+3. Create a PostgreSQL database and enter its credentials in `config/settings.py`, in the `DATABASES` section.
 
-4. Spusťte migrace a vytvořte administrátora:
+4. Run the migrations and create an administrator:
 
    ```
    python manage.py migrate
    python manage.py createsuperuser
    ```
 
-5. Spusťte server:
+5. Start the server:
 
    ```
    python manage.py runserver
    ```
 
-6. Otevřete v prohlížeči `http://127.0.0.1:8000/shop/`.
+6. Open `http://127.0.0.1:8000/shop/` in your browser.
 
-## Testy
+## Tests
 
 ```
 python manage.py test
 ```
 
-Testy ověřují registraci (vlastní uživatelský model), kontrolu ceny s různými hodnotami, přidání do košíku a objednávku se zůstatkem. Při spuštění testů se používá SQLite (viz konec `config/settings.py`), takže nejsou potřeba práva k vytvoření databáze v PostgreSQL.
+The tests cover registration (custom user model), price validation with various values, adding items to the cart and an order paid from the balance. SQLite is used when running the tests (see the end of `config/settings.py`), so no permission to create a database in PostgreSQL is needed.
 
-## Struktura projektu
+## Project structure
 
 ```
-config/             nastavení projektu (settings.py, urls.py)
-shop/               hlavní aplikace
-  models.py         modely (User, Category, Product, Order, OrderItem)
+config/             project settings (settings.py, urls.py)
+shop/               main application
+  models.py         models (User, Category, Product, Order, OrderItem)
   views.py          views
-  forms.py          formuláře
-  mixins.py         přístup pouze pro administrátora
-  urls.py           adresy aplikace
-  admin.py          administrace
-  tests.py          automatické testy
-  templates/shop/   HTML šablony
-  static/shop/      styly (css), obrázky (images), skripty (js)
-templates/          společná šablona base.html a nav.html
-media/              nahrané fotografie produktů
+  forms.py          forms
+  mixins.py         administrator-only access
+  urls.py           application URLs
+  admin.py          administration
+  tests.py          automated tests
+  templates/shop/   HTML templates
+  static/shop/      styles (css), images, scripts (js)
+templates/          shared templates base.html and includes/nav.html
+media/              uploaded product photos
 ```
 
-## Autor
+## Author
 
 Liana Šljonkina
